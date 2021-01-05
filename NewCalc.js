@@ -5,7 +5,7 @@ import {
   Text,
   View,
   TextInput,
-  ScrollView
+  ScrollView,
 } from "react-native";
 
 function NewCalc() {
@@ -150,13 +150,13 @@ export default NewCalc;
 
 const styles = StyleSheet.create({
   home: {
-    flex: 1
+    flex: 1,
   },
   text: {
     fontSize: 20,
     margin: 10,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   boxHeader: {
     marginBottom: 10,
@@ -164,24 +164,24 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
     fontSize: 15,
-    textDecorationLine: "underline"
+    textDecorationLine: "underline",
   },
   textInput: {
     margin: 1,
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
-    width: "60%"
+    width: "60%",
   },
   level: {
     height: 40,
     width: "40%",
     textAlign: "left",
     fontWeight: "bold",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   ltCombo: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   outerBox: {
     padding: 5,
@@ -190,6 +190,6 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 500,
     borderColor: "gray",
-    borderWidth: 1
-  }
+    borderWidth: 1,
+  },
 });
