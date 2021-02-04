@@ -1,16 +1,17 @@
-import React, { Component, useState } from 'react';
-import { Button, Image, StyleSheet, Text, View, StatusBar } from 'react-native';
-import Header from './Header';
+import React, { Component, useState } from "react";
+import { Button, Image, StyleSheet, Text, View, StatusBar } from "react-native";
+import Header from "./Header";
 import {
   Card,
   DataTable,
   Subheading,
   Dialog,
   Paragraph,
-} from 'react-native-paper';
+} from "react-native-paper";
 
-export default ({navigation, data_sample}) => {
+export default ({ navigation, data_sample }) => {
   const [visible, setVisible] = useState();
+  console.log(data_sample);
 
   const showDialog = () => setVisible(true);
 
@@ -22,23 +23,23 @@ export default ({navigation, data_sample}) => {
       </View>
       <DataTable.Row>
         <DataTable.Cell>date-stamp</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]['date_stamp']}</DataTable.Cell>
+        <DataTable.Cell>{data_sample[0]["date_stamp"]}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>vehicle_make</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]['vehicle_make']}</DataTable.Cell>
+        <DataTable.Cell>{data_sample[0]["vehicle_make"]}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>vehicle_model</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]['vehicle_model']}</DataTable.Cell>
+        <DataTable.Cell>{data_sample[0]["vehicle_model"]}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>tyre_size</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]['tyre_size']}</DataTable.Cell>
+        <DataTable.Cell>{data_sample[0]["tyre_size"]}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>added_by</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]['added_by']}</DataTable.Cell>
+        <DataTable.Cell>{data_sample[0]["added_by"]}</DataTable.Cell>
       </DataTable.Row>
     </Card>
   );
@@ -56,6 +57,6 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginBottom: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
 });

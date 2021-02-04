@@ -3,7 +3,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import Header from "./Header";
 import NewCalc from "./NewCalc";
 import Home from "./Home";
-import LocalCalc from "./LocalCalc123";
+import LocalCalc from "./LocalCalc";
 import CloudCalc from "./CloudCalc";
 import TkphDetails from "./TkphDetails";
 import { StatusBar } from "react-native";
@@ -67,7 +67,7 @@ function App() {
         <Stack.Screen name="NewCalc" component={NewCalc} />
         <Stack.Screen
           name="TkphDetails"
-          component={TkphDetails}
+          component={(props) => <TkphDetails data_sample={data_sample} />}
           data_sample={data_sample}
         />
         <Stack.Screen
