@@ -22,16 +22,19 @@ function useForceUpdate() {
 export default ({ navigation, data_sample }) => {
   const [data, setData] = useState("Change this text");
   const [forceUpdate, forceUpdateId] = useForceUpdate();
+  let fileUri = "/sqlite1.db";
+  const db = SQLite.openDatabase(fileUri);
+  db.transaction(
+    (tx) => {
+      tx.executeSql(
+        "create table if not exists items (id integer primary key not null, done int, value text);"
+      );
+    },
+    null,
+    forceUpdate
+  );
 
   const changeSqlText = () => {
-    //let fileUri = `${FileSystem.documentDirectory}db123.db`;
-    console.log(fileUri);
-    let fileUri = "/sqlite.db";
-    //let fileUri = "/db123.db";
-
-    const db = SQLite.openDatabase(fileUri);
-    //const db = SQLite.openDatabase("db.db");
-
     db.transaction(
       (tx) => {
         tx.executeSql("select * from items", [], (_, { rows }) => {
@@ -46,22 +49,12 @@ export default ({ navigation, data_sample }) => {
   const [text, setText] = React.useState(null);
 
   const addSqlDb = (text) => {
-    //let fileUri = `${FileSystem.documentDirectory}db123.db`;
-    console.log(fileUri);
-    let fileUri = "/sqlite.db";
-    //let fileUri = "/db123.db";
-
-    const db = SQLite.openDatabase(fileUri);
-    //const db = SQLite.openDatabase("db.db");
     if (text === null || text === "") {
       return false;
     }
 
     db.transaction(
       (tx) => {
-        tx.executeSql(
-          "create table if not exists items (id integer primary key not null, done int, value text);"
-        );
         tx.executeSql("insert into items (done, value) values (0, ?)", [text]);
         tx.executeSql("select * from items", [], (_, { rows }) =>
           console.log(JSON.stringify(rows))
