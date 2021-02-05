@@ -9,9 +9,9 @@ import {
   Paragraph,
 } from "react-native-paper";
 
-export default ({ navigation, data_sample }) => {
+export default ({ route, navigation }) => {
   const [visible, setVisible] = useState();
-  console.log(data_sample);
+  const { data123 } = route.params;
 
   const showDialog = () => setVisible(true);
 
@@ -23,23 +23,27 @@ export default ({ navigation, data_sample }) => {
       </View>
       <DataTable.Row>
         <DataTable.Cell>date-stamp</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]["date_stamp"]}</DataTable.Cell>
+        <DataTable.Cell>{data123["date_stamp"]}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>vehicle_make</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]["vehicle_make"]}</DataTable.Cell>
+        <DataTable.Cell>{data123["vehicle_make"]}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>vehicle_model</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]["vehicle_model"]}</DataTable.Cell>
+        <DataTable.Cell>{data123["vehicle_model"]}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>tyre_size</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]["tyre_size"]}</DataTable.Cell>
+        <DataTable.Cell>{data123["tyre_size"]}</DataTable.Cell>
       </DataTable.Row>
       <DataTable.Row>
         <DataTable.Cell>added_by</DataTable.Cell>
-        <DataTable.Cell>{data_sample[0]["added_by"]}</DataTable.Cell>
+        <DataTable.Cell>{data123["added_by"]}</DataTable.Cell>
+      </DataTable.Row>
+            <DataTable.Row>
+        <DataTable.Cell>gross_vehicle_weight</DataTable.Cell>
+        <DataTable.Cell>{data123["gross_vehicle_weight"]}</DataTable.Cell>
       </DataTable.Row>
     </Card>
   );

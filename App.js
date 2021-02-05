@@ -48,12 +48,7 @@ let data_sample = [
 const AvailableCalc = ({ navigation }) => {
   return (
     <Tabs.Navigator>
-      <Tabs.Screen
-        name="LocalCalc"
-        component={(props) => (
-          <LocalCalc navigation={navigation} data_sample={data_sample} />
-        )}
-      />
+      <Tabs.Screen name="LocalCalc" component={LocalCalc} />
       <Tabs.Screen name="CloudCalc" component={CloudCalc} />
     </Tabs.Navigator>
   );
@@ -67,7 +62,7 @@ function App() {
         <Stack.Screen name="NewCalc" component={NewCalc} />
         <Stack.Screen
           name="TkphDetails"
-          component={(props) => <TkphDetails data_sample={data_sample} />}
+          component={TkphDetails}
           data_sample={data_sample}
         />
         <Stack.Screen
