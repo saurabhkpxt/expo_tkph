@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Button, Image, StyleSheet, Text, View, StatusBar } from 'react-native';
-import Header from './Header';
+import React, { Component } from "react";
+import { Button, Image, StyleSheet, Text, View, StatusBar } from "react-native";
+import Header from "./Header";
 
 export default ({ navigation }) => (
   <View style={styles.header}>
@@ -8,13 +8,13 @@ export default ({ navigation }) => (
     <Header />
     <Button
       title="Add new calculation"
-      onPress={() => navigation.navigate('NewCalc')}
+      onPress={() => navigation.navigate("NewCalc")}
     />
     <Button
       title="Available calculations"
-      onPress={() => navigation.navigate('AvailableCalc')}
+      onPress={() => navigation.navigate("AvailableCalc")}
     />
-    <Button title="Check" onPress={() => console.log(123)} />
+    <Button title="Database" onPress={() => navigation.navigate("Database")} />
   </View>
 );
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import Header from "./Header";
 import NewCalc from "./NewCalc";
@@ -10,6 +10,11 @@ import { StatusBar } from "react-native";
 import { NavigationContainer, TabActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import DBVehicles from "./Screens/Database/DBVehicles";
+import DBTyreSizes from "./Screens/Database/DBTyreSizes";
+import DBK1Coefficient from "./Screens/Database/DBK1Coefficient";
+import * as FileSystem from "expo-file-system";
+import * as SQLite from "expo-sqlite";
 
 const Stack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -53,12 +58,68 @@ const AvailableCalc = ({ navigation }) => {
     </Tabs.Navigator>
   );
 };
-
+const Database = ({ navigation }) => {
+  return (
+    <Tabs.Navigator>
+      <Tabs.Screen name="DBVehicles" component={DBVehicles} />
+      <Tabs.Screen name="DBTyreSizes" component={DBTyreSizes} />
+      <Tabs.Screen name="DBK1Coefficient" component={DBK1Coefficient} />
+    </Tabs.Navigator>
+  );
+};
+function useForceUpdate() {
+  const [value, setValue] = useState(0);
+  return [() => setValue(value + 1), value];
+}
 function App() {
+  const [forceUpdate, forceUpdateId] = useForceUpdate();
+
+  useEffect(() => {
+    async function openDatabase(pathToDatabaseFile) {
+      if (
+        !(
+          await FileSystem.getInfoAsync(FileSystem.documentDirectory + "SQLite")
+        ).exists
+      ) {
+        await FileSystem.makeDirectoryAsync(
+          FileSystem.documentDirectory + "SQLite"
+        );
+      }
+      await FileSystem.downloadAsync(
+        Asset.fromModule(pathToDatabaseFile).uri,
+        FileSystem.documentDirectory + "SQLite/myDatabaseName.db"
+      );
+      return SQLite.openDatabase("myDatabaseName.db");
+    }
+
+    function openDatabase1(pathToDatabaseFile) {
+      return SQLite.openDatabase(pathToDatabaseFile);
+    }
+
+    //let fileUri = "sqlite.db";
+    let fileUri = "myDatabaseName.db";
+    const db = openDatabase1(fileUri);
+    console.log(db);
+
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          "create table if not exists items (date_stamp TEXT primary key not null, date TEXT,mine_details TEXT,tyre_size TEXT,max_amb_temp TEXT,cycle_length TEXT,cycle_duration TEXT,vehicle_make TEXT,vehicle_model TEXT,empty_vehicle_weight TEXT,pay_load TEXT,weight_correction TEXT,load_dist_front_unloaded TEXT,load_dist_rear_unloaded TEXT,load_dist_front_loaded TEXT,load_dist_rear_loaded TEXT,added_by TEXT,distance_km_per_hour TEXT,gross_vehicle_weight TEXT,k1_dist_coefficient TEXT,k2_temp_coefficient TEXT,avg_tyre_load_front TEXT,avg_tyre_load_rear TEXT,basic_site_tkph_front TEXT,basic_site_tkph_rear TEXT,real_site_tkph_front TEXT,real_site_tkph_rear TEXT);"
+        );
+        tx.executeSql("select * from items", [], (_, { rows }) => {
+          console.log(rows["_array"]);
+          console.log("This is working");
+        });
+      },
+      null,
+      forceUpdate
+    );
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Database" component={Database} />
         <Stack.Screen name="NewCalc" component={NewCalc} />
         <Stack.Screen
           name="TkphDetails"
