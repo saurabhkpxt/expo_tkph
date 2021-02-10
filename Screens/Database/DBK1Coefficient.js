@@ -23,6 +23,8 @@ export default ({ navigation }) => {
   const [cycleLengthInput, setCycleLengthInput] = useState("1");
   const [k1CoefficientInput, setK1CoefficientInput] = useState("2");
   const [forceUpdate, forceUpdateId] = useForceUpdate();
+  const [addForm, setAddForm] = useState(false);
+  const [content, setContent] = useState(<View></View>);
   const [dataArray, setDataArray] = useState([
     {
       cycle_length: 1,
@@ -33,7 +35,7 @@ export default ({ navigation }) => {
     cycle_length: 2,
     k1_coefficient: 1,
   });
-  let fileUri = "/xyz123.db";
+  let fileUri = "/xyz12345795.db";
   const db = SQLite.openDatabase(fileUri);
   useEffect(() => {
     db.transaction(
@@ -45,6 +47,7 @@ export default ({ navigation }) => {
           console.log(rows["_array"]);
           setDataArray(rows["_array"]);
           setData(JSON.stringify(rows["_array"]));
+          fill;
         });
       },
       null,
@@ -77,9 +80,34 @@ export default ({ navigation }) => {
       forceUpdate
     );
   }
-  return (
-    <View style={styles.header}>
-      <Header />
+  function update() {
+    db.transaction(
+      (tx) => {
+        values["cycle_length"] = cycleLengthInput;
+        values["k1_coefficient"] = k1CoefficientInput;
+        const len = JSON.stringify(Object.keys(values)).length;
+        const sqlFields = JSON.stringify(Object.keys(values)).slice(1, len - 1);
+        const sqlValues = Object.values(values);
+        console.log(sqlFields);
+
+        tx.executeSql(
+          `insert into k1coefficient (${sqlFields}) values (?,?)`,
+          sqlValues
+        );
+        tx.executeSql("select * from k1coefficient", [], (_, { rows }) => {
+          console.log(rows["_array"]);
+          console.log("this is that");
+          setDataArray(rows["_array"]);
+          setData(JSON.stringify(rows["_array"]));
+        });
+      },
+      null,
+      forceUpdate
+    );
+  }
+
+  let x = (
+    <View>
       <Text>K1 Coefficient</Text>
       <View style={styles.ltCombo}>
         <Text style={styles.level}>Cycle Length</Text>
@@ -103,30 +131,48 @@ export default ({ navigation }) => {
         <Text style={styles.level}>2</Text>
         <Text style={styles.level}>1</Text>
       </View>
-      <View>
-        <Text>Add New Coefficient</Text>
-        <View style={styles.ltCombo}>
-          <Text style={styles.level}>Cycle Length</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={(text) => setCycleLengthInput(text)}
-            placeholder="Enter %"
-          />
-        </View>
-        <View style={styles.ltCombo}>
-          <Text style={styles.level}>K1 Coefficient</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={(text) => setK1CoefficientInput(text)}
-            placeholder="Enter %"
-          />
-        </View>
-        <Button title="Add" onPress={addK1Coefficient} />
-      </View>
+    </View>
+  );
 
+  let y = (
+    <View>
+      <Text>Add New Coefficient</Text>
+      <View style={styles.ltCombo}>
+        <Text style={styles.level}>Cycle Length</Text>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={(text) => setCycleLengthInput(text)}
+          placeholder="Enter cycle length"
+        />
+      </View>
+      <View style={styles.ltCombo}>
+        <Text style={styles.level}>K1 Coefficient</Text>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={(text) => setK1CoefficientInput(text)}
+          placeholder="Enter k1 coefficient"
+        />
+      </View>
+      <Button title="Add" onPress={addK1Coefficient} />
+    </View>
+  );
+  useEffect(() => {
+    if (addForm === false) {
+      setContent(x);
+    } else {
+      setContent(y);
+    }
+  }, [addForm]);
+
+  return (
+    <View style={styles.header}>
+      <Header />
+      {content}
       <Button
         title="Add new coefficient"
-        onPress={() => navigation.navigate("Database")}
+        onPress={() => {
+          setAddForm(true);
+        }}
       />
     </View>
   );
