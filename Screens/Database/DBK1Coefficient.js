@@ -31,56 +31,54 @@ export default ({ navigation }) => {
   ]);
   let fileUri = "/xyz123.db";
   const db = SQLite.openDatabase(fileUri);
+
   useEffect(() => {
     db.transaction(
       (tx) => {
-        tx.executeSql(
-          "create table if not exists k1coefficient (cycle_length TEXT primary key not null, k1_coefficient TEXT);"
-        );
         tx.executeSql("select * from k1coefficient", [], (_, { rows }) => {
           console.log("connected to DB");
           console.log(rows["_array"]);
           setDataArray(rows["_array"]);
-          setData(JSON.stringify(rows["_array"]));
         });
       },
       null,
-      forceUpdate
+      null
     );
   }, []);
 
-  function addK1Coefficient() {
-    console.log("adding");
+  useEffect(() => {
+    function addK1Coefficient() {
+      console.log("adding");
 
-    db.transaction(
-      (tx) => {
-        const values = {
-          cycle_length: ci,
-          k1_coefficient: ki,
-        };
-        const len = JSON.stringify(Object.keys(values)).length;
-        const sqlFields = JSON.stringify(Object.keys(values)).slice(1, len - 1);
-        const sqlValues = Object.values(values);
-        console.log(values);
+      db.transaction(
+        (tx) => {
+          const values = {
+            cycle_length: ci,
+            k1_coefficient: ki,
+          };
+          const len = JSON.stringify(Object.keys(values)).length;
+          const sqlFields = JSON.stringify(Object.keys(values)).slice(
+            1,
+            len - 1
+          );
+          const sqlValues = Object.values(values);
 
-        tx.executeSql(
-          `insert into k1coefficient (${sqlFields}) values (?,?)`,
-          sqlValues
-        );
-        tx.executeSql("select * from k1coefficient", [], (_, { rows }) => {
-          console.log(rows["_array"]);
-          //setDataArray(rows["_array"]);
-          //setData(JSON.stringify(rows["_array"]));
-        });
-      },
-      null,
-      forceUpdate
-    );
-  }
-
-  return (
-    <View style={styles.header}>
-      <Header />
+          tx.executeSql(
+            `insert into k1coefficient (${sqlFields}) values (?,?)`,
+            sqlValues
+          );
+          tx.executeSql("select * from k1coefficient", [], (_, { rows }) => {
+            console.log(rows["_array"]);
+            setDataArray(rows["_array"]);
+            //setData(JSON.stringify(rows["_array"]));
+          });
+        },
+        null,
+        null
+      );
+      setAddForm(false);
+    }
+    let x = (
       <View>
         <Text>Add New Coefficient</Text>
         <View style={styles.ltCombo}>
@@ -96,8 +94,10 @@ export default ({ navigation }) => {
           />
         </View>
         <Button title="Add" onPress={addK1Coefficient} />
+        <Button title="Cancel" onPress={() => setAddForm(false)} />
       </View>
-
+    );
+    let y = (
       <View>
         <Text>K1 Coefficient</Text>
         <View style={styles.ltCombo}>
@@ -114,7 +114,20 @@ export default ({ navigation }) => {
             </View>
           )}
         />
+        <Button title="Show Form" onPress={() => setAddForm(true)} />
       </View>
+    );
+    if (addForm === true) {
+      setContent(x);
+    } else {
+      setContent(y);
+    }
+  }, [addForm, dataArray]);
+
+  return (
+    <View style={styles.header}>
+      <Header />
+      {content}
     </View>
   );
 };

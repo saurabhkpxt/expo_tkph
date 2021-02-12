@@ -89,9 +89,6 @@ export default ({ navigation, data_sample }) => {
   useEffect(() => {
     db.transaction(
       (tx) => {
-        tx.executeSql(
-          "create table if not exists items (date_stamp TEXT primary key not null, date TEXT,mine_details TEXT,tyre_size TEXT,max_amb_temp TEXT,cycle_length TEXT,cycle_duration TEXT,vehicle_make TEXT,vehicle_model TEXT,empty_vehicle_weight TEXT,pay_load TEXT,weight_correction TEXT,load_dist_front_unloaded TEXT,load_dist_rear_unloaded TEXT,load_dist_front_loaded TEXT,load_dist_rear_loaded TEXT,added_by TEXT,distance_km_per_hour TEXT,gross_vehicle_weight TEXT,k1_dist_coefficient TEXT,k2_temp_coefficient TEXT,avg_tyre_load_front TEXT,avg_tyre_load_rear TEXT,basic_site_tkph_front TEXT,basic_site_tkph_rear TEXT,real_site_tkph_front TEXT,real_site_tkph_rear TEXT);"
-        );
         tx.executeSql("select * from items", [], (_, { rows }) => {
           console.log(rows["_array"]);
           setDataArray(rows["_array"]);
@@ -99,16 +96,13 @@ export default ({ navigation, data_sample }) => {
         });
       },
       null,
-      forceUpdate
+      null
     );
   }, []);
 
   const changeSqlText = () => {
     db.transaction(
       (tx) => {
-        tx.executeSql(
-          "create table if not exists items (date_stamp TEXT primary key not null, date TEXT,mine_details TEXT,tyre_size TEXT,max_amb_temp TEXT,cycle_length TEXT,cycle_duration TEXT,vehicle_make TEXT,vehicle_model TEXT,empty_vehicle_weight TEXT,pay_load TEXT,weight_correction TEXT,load_dist_front_unloaded TEXT,load_dist_rear_unloaded TEXT,load_dist_front_loaded TEXT,load_dist_rear_loaded TEXT,added_by TEXT,distance_km_per_hour TEXT,gross_vehicle_weight TEXT,k1_dist_coefficient TEXT,k2_temp_coefficient TEXT,avg_tyre_load_front TEXT,avg_tyre_load_rear TEXT,basic_site_tkph_front TEXT,basic_site_tkph_rear TEXT,real_site_tkph_front TEXT,real_site_tkph_rear TEXT);"
-        );
         tx.executeSql("select * from items", [], (_, { rows }) => {
           console.log(rows["_array"]);
           setDataArray(rows["_array"]);
@@ -116,7 +110,7 @@ export default ({ navigation, data_sample }) => {
         });
       },
       null,
-      forceUpdate
+      null
     );
   };
   const [text, setText] = React.useState(null);
@@ -124,9 +118,6 @@ export default ({ navigation, data_sample }) => {
   const addSqlDb = () => {
     db.transaction(
       (tx) => {
-        tx.executeSql(
-          "create table if not exists items (date_stamp TEXT primary key not null, date TEXT,mine_details TEXT,tyre_size TEXT,max_amb_temp TEXT,cycle_length TEXT,cycle_duration TEXT,vehicle_make TEXT,vehicle_model TEXT,empty_vehicle_weight TEXT,pay_load TEXT,weight_correction TEXT,load_dist_front_unloaded TEXT,load_dist_rear_unloaded TEXT,load_dist_front_loaded TEXT,load_dist_rear_loaded TEXT,added_by TEXT,distance_km_per_hour TEXT,gross_vehicle_weight TEXT,k1_dist_coefficient TEXT,k2_temp_coefficient TEXT,avg_tyre_load_front TEXT,avg_tyre_load_rear TEXT,basic_site_tkph_front TEXT,basic_site_tkph_rear TEXT,real_site_tkph_front TEXT,real_site_tkph_rear TEXT);"
-        );
         values["date_stamp"] = Date.now();
         Object.values(values);
         console.log(JSON.stringify(Object.keys(values)));
@@ -143,7 +134,7 @@ export default ({ navigation, data_sample }) => {
         );
       },
       null,
-      forceUpdate
+      null
     );
   };
 
