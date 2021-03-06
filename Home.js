@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Button, Image, StyleSheet, Text, View, StatusBar } from "react-native";
 import Header from "./Header";
+import ResetDatabase from "./Components/ResetDatabase";
 
 export default ({ navigation }) => (
-  <View style={styles.header}>
+  <View>
     <Text>This is home screen!!!</Text>
     <Header />
     <Button
@@ -15,6 +16,7 @@ export default ({ navigation }) => (
       onPress={() => navigation.navigate("AvailableCalc")}
     />
     <Button title="Database" onPress={() => navigation.navigate("Database")} />
+    <ResetDatabase />
   </View>
 );
 

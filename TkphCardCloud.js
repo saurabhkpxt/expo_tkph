@@ -9,7 +9,7 @@ import {
   Paragraph,
 } from 'react-native-paper';
 
-export default ({ navigation, data_sample, deleteRecord }) => {
+export default ({ navigation, data_sample, importToLocal }) => {
   const [visible, setVisible] = useState();
 
   const showDialog = () =>
@@ -68,17 +68,9 @@ export default ({ navigation, data_sample, deleteRecord }) => {
       <View style={styles.buttonbox}>
         <View style={styles.button}>
           <Button
-            color="darkblue"
-            title="Upload"
-            disabled={disabled}
-            onPress={() => navigation.navigate('Home')}
-          />
-        </View>
-        <View style={styles.button}>
-          <Button
-            color="darkred"
-            title="Delete"
-            onPress={() => deleteRecord(data_sample['date_stamp'])}
+            color="darkgreen"
+            title="Import"
+            onPress={() => importToLocal(data_sample)}
           />
         </View>
       </View>
@@ -109,6 +101,8 @@ const styles = StyleSheet.create({
   buttonbox: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent:'flex-end',
+    alignItems:"center",
     height: 50,
   },
   button: {

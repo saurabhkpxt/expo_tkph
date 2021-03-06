@@ -18,6 +18,7 @@ import * as SQLite from "expo-sqlite";
 
 const Stack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
+
 let data_sample = [
   {
     date_stamp: "1610022038934",
@@ -72,45 +73,50 @@ function useForceUpdate() {
   return [() => setValue(value + 1), value];
 }
 function App() {
+  const [netStatus, setNetStatus] = useState("123");
   const [forceUpdate, forceUpdateId] = useForceUpdate();
 
   useEffect(() => {
     let fileUri = "/xyz123.db";
     const db = SQLite.openDatabase(fileUri);
-    console.log(db);
-
     db.transaction(
       (tx) => {
         tx.executeSql(
-          "create table if not exists items (date_stamp TEXT primary key not null, date TEXT,mine_details TEXT,tyre_size TEXT,max_amb_temp TEXT,cycle_length TEXT,cycle_duration TEXT,vehicle_make TEXT,vehicle_model TEXT,empty_vehicle_weight TEXT,pay_load TEXT,weight_correction TEXT,load_dist_front_unloaded TEXT,load_dist_rear_unloaded TEXT,load_dist_front_loaded TEXT,load_dist_rear_loaded TEXT,added_by TEXT,distance_km_per_hour TEXT,gross_vehicle_weight TEXT,k1_dist_coefficient TEXT,k2_temp_coefficient TEXT,avg_tyre_load_front TEXT,avg_tyre_load_rear TEXT,basic_site_tkph_front TEXT,basic_site_tkph_rear TEXT,real_site_tkph_front TEXT,real_site_tkph_rear TEXT);"
+          "create table if not exists items (date_stamp TEXT primary key not null, date TEXT,mine_details TEXT,tyre_size TEXT,max_amb_temp TEXT,cycle_length TEXT,cycle_duration TEXT,vehicle_make TEXT,vehicle_model TEXT,empty_vehicle_weight TEXT,pay_load TEXT,weight_correction TEXT,load_dist_front_unloaded TEXT,load_dist_rear_unloaded TEXT,load_dist_front_loaded TEXT,load_dist_rear_loaded TEXT,added_by TEXT,distance_km_per_hour TEXT,gross_vehicle_weight TEXT,k1_dist_coefficient TEXT,k2_temp_coefficient TEXT,avg_tyre_load_front TEXT,avg_tyre_load_rear TEXT,basic_site_tkph_front TEXT,basic_site_tkph_rear TEXT,real_site_tkph_front TEXT,real_site_tkph_rear TEXT, uploaded BOOL);"
         );
+
         tx.executeSql(
           "create table if not exists k1coefficient (cycle_length TEXT primary key not null, k1_coefficient TEXT);"
         );
         tx.executeSql(
           "create table if not exists tyresizes (tyre_size TEXT primary key not null);"
         );
+        tx.executeSql(
+          "create table if not exists vehicles1 (vehicle_id TEXT primary key not null, vehicle_make TEXT,vehicle_model TEXT,empty_vehicle_weight TEXT,pay_load TEXT,load_dist_front_unloaded TEXT,load_dist_rear_unloaded TEXT,load_dist_front_loaded TEXT,load_dist_rear_loaded TEXT);"
+        );
       },
       null,
       null
     );
     //db._db.close()
-  }, []);
+  }, [netStatus]);
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Database" component={Database} />
-        <Stack.Screen name="NewCalc" component={NewCalc} />
-        <Stack.Screen
-          name="TkphDetails"
-          component={TkphDetails}
-          data_sample={data_sample}
-        />
         <Stack.Screen
           name="AvailableCalc"
           component={AvailableCalc}
           initialParams={data_sample}
+        />
+
+        <Stack.Screen name="NewCalc" component={NewCalc} />
+        <Stack.Screen name="Database" component={Database} />
+
+        <Stack.Screen
+          name="TkphDetails"
+          component={TkphDetails}
+          data_sample={data_sample}
         />
       </Stack.Navigator>
     </NavigationContainer>

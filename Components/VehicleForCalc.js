@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import Dialog from 'react-native-dialog';
 import { Picker } from '@react-native-picker/picker';
-import Header from '../../Header';
 import * as SQLite from 'expo-sqlite';
 
 function useForceUpdate() {
@@ -19,7 +18,7 @@ function useForceUpdate() {
   return [() => setValue(value + 1), value];
 }
 
-export default ({ navigation }) => {
+export default ({ navigation, addVehicleDetails, fields }) => {
   const [vehicleMakePV, setVehicleMakePV] = useState('Select make');
   const [vehicleModelPV, setVehicleModelPV] = useState('Select model');
   const [forceUpdate, forceUpdateId] = useForceUpdate();
@@ -52,6 +51,14 @@ export default ({ navigation }) => {
       null
     );
   }, []);
+
+  useEffect(() => {
+    if (fields === false) {
+      setVehicleMakePV('Select make');
+      setVehicleModelPV('Select model');
+      clearOtherFields();
+    }
+  }, [fields]);
 
   // to add a new vehicle details
 
@@ -199,6 +206,7 @@ export default ({ navigation }) => {
               rows['_array'][0]['load_dist_rear_loaded']
             );
             console.log(rows['_array'][0]['load_dist_front_loaded']);
+            addVehicleDetails(rows['_array']);
           }
         );
       },
@@ -222,11 +230,9 @@ export default ({ navigation }) => {
   };
 
   return (
-    <View style={styles.header}>
-      <Header />
+    <View>
       <View>
-        <Text>Add Vehicle Details</Text>
-        <View style={styles.outerBox}>
+        <View>
           {/* Vehicle Make*/}
           <View style={styles.ltCombo}>
             <Text style={styles.level}>Vehicle Make</Text>
@@ -366,23 +372,6 @@ export default ({ navigation }) => {
             />
           </View>
         </View>
-        <Button
-          title="Save"
-          onPress={() => {
-            if (
-              vehicleMakePV === 'Select make' ||
-              vehicleModelPV === 'Select model'
-            ) {
-              alert('Please enter vehicle name');
-              console.log('Please fill required fields');
-            } else {
-              console.log(123);
-              console.log(JSON.stringify(input_value));
-
-              addK1Coefficient({ input_value });
-            }
-          }}
-        />
       </View>
     </View>
   );
@@ -390,38 +379,48 @@ export default ({ navigation }) => {
 
 //styles
 const styles = StyleSheet.create({
-  header: {
-    marginTop: StatusBar.currentHeight,
+  home: {
+    flex: 1,
   },
-  logo: {
-    height: 80,
+  text: {
+    fontSize: 20,
+    margin: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
-  level: {
-    height: 40,
-    width: '50%',
+  boxHeader: {
+    marginBottom: 10,
     textAlign: 'center',
     fontWeight: 'bold',
-    justifyContent: 'center',
-  },
-  level1: {
-    height: 40,
-    width: '25%',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    justifyContent: 'center',
-  },
-  ltCombo: {
-    flexDirection: 'row',
+    fontStyle: 'italic',
+    fontSize: 15,
+    textDecorationLine: 'underline',
   },
   textInput: {
     margin: 1,
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    width: '50%',
+    width: '60%',
   },
-  flatList: {
-    height: '50%',
+  level: {
+    height: 40,
+    width: '40%',
+    textAlign: 'left',
+    fontWeight: 'bold',
+    justifyContent: 'center',
+  },
+  ltCombo: {
+    flexDirection: 'row',
+  },
+  outerBox: {
+    padding: 5,
+    paddingTop: 0,
+    marginHorizontal: 'auto',
+    width: '100%',
+    maxWidth: 500,
+    borderColor: 'gray',
+    borderWidth: 1,
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect } from 'react';
 import {
   Button,
   Image,
@@ -8,9 +8,9 @@ import {
   View,
   StatusBar,
   FlatList,
-} from "react-native";
-import Header from "../../Header";
-import * as SQLite from "expo-sqlite";
+} from 'react-native';
+import Header from '../../Header';
+import * as SQLite from 'expo-sqlite';
 
 function useForceUpdate() {
   const [value, setValue] = useState(0);
@@ -18,26 +18,21 @@ function useForceUpdate() {
 }
 
 export default ({ navigation }) => {
-  const [si, setSi] = useState("24.00-35");
-  const [ki, setKi] = useState("2");
+  const [si, setSi] = useState();
   const [forceUpdate, forceUpdateId] = useForceUpdate();
   const [addForm, setAddForm] = useState(false);
   const [content, setContent] = useState(<View></View>);
-  const [dataArray, setDataArray] = useState([
-    {
-      tyre_size: "24.00-35",
-    },
-  ]);
-  let fileUri = "/xyz123.db";
+  const [dataArray, setDataArray] = useState();
+  let fileUri = '/xyz123.db';
   const db = SQLite.openDatabase(fileUri);
 
   useEffect(() => {
     db.transaction(
       (tx) => {
-        tx.executeSql("select * from tyresizes", [], (_, { rows }) => {
-          console.log("connected to DB");
-          console.log(rows["_array"]);
-          setDataArray(rows["_array"]);
+        tx.executeSql('select * from tyresizes', [], (_, { rows }) => {
+          console.log('connected to DB');
+          console.log(rows['_array']);
+          setDataArray(rows['_array']);
         });
       },
       null,
@@ -45,11 +40,13 @@ export default ({ navigation }) => {
     );
   }, []);
 
-  function addK1Coefficient() {
-    console.log("adding");
+  function addK1Coefficient({input_value}) {
+    console.log('adding');
     const values = {
-      tyre_size: si,
+      tyre_size: input_value['tyre_size'],
     };
+    console.log(values);
+    console.log(input_value['tyre_size']);
 
     db.transaction(
       (tx) => {
@@ -61,9 +58,9 @@ export default ({ navigation }) => {
           `insert into tyresizes (${sqlFields}) values (?)`,
           sqlValues
         );
-        tx.executeSql("select * from tyresizes", [], (_, { rows }) => {
-          console.log(rows["_array"]);
-          setDataArray(rows["_array"]);
+        tx.executeSql('select * from tyresizes', [], (_, { rows }) => {
+          console.log(rows['_array']);
+          setDataArray(rows['_array']);
           //setData(JSON.stringify(rows["_array"]));
         });
       },
@@ -72,6 +69,7 @@ export default ({ navigation }) => {
     );
     setAddForm(false);
   }
+  let input_value={tyre_size:""}
 
   useEffect(() => {
     let x = (
@@ -80,11 +78,14 @@ export default ({ navigation }) => {
         <View style={styles.ltCombo}>
           <TextInput
             style={styles.textInput}
-            onChangeText={(text) => setSi(text)}
+            onChangeText={(text) => {
+              setSi(text);
+              input_value['tyre_size'] = text;
+            }}
             placeholder="Enter cycle length"
           />
         </View>
-        <Button title="Add" onPress={addK1Coefficient} />
+        <Button title="Add" onPress={() => addK1Coefficient({ input_value })} />
         <Button title="Cancel" onPress={() => setAddForm(false)} />
       </View>
     );
@@ -99,7 +100,7 @@ export default ({ navigation }) => {
           data={dataArray}
           renderItem={({ item }) => (
             <View style={styles.ltCombo}>
-              <Text style={styles.level}>{item["tyre_size"]}</Text>
+              <Text style={styles.level}>{item['tyre_size']}</Text>
             </View>
           )}
         />
@@ -130,22 +131,22 @@ const styles = StyleSheet.create({
   },
   level: {
     height: 40,
-    width: "100%",
-    textAlign: "center",
-    fontWeight: "bold",
-    justifyContent: "center",
+    width: '100%',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    justifyContent: 'center',
   },
   ltCombo: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   textInput: {
     margin: 1,
     height: 40,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
-    width: "50%",
+    width: '50%',
   },
   flatList: {
-    height: "50%",
+    height: '50%',
   },
 });
